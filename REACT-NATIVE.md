@@ -1,7 +1,7 @@
-# Projeto de seleção Coopersystem (Angular 11+)
-  
-O teste consiste em criar uma mini aplicação em angular 11+ que simula um resgate personalizado de fundos de investimentos em ações.  
-  
+# Projeto de seleção Coopersystem (React Native)
+
+O teste consiste em criar uma mini aplicação que react native que simula um resgate personalizado de fundos de investimentos em ações.
+
 Serão avaliados:  
 * Integração com api rest
 * Navegação entre telas  

@@ -1,6 +1,6 @@
-# Projeto de seleção Coopersystem (Angular 11+)
+# Projeto de seleção Coopersystem (JAVA/JSP/JQUERY)
   
-O teste consiste em criar uma mini aplicação em angular 11+ que simula um resgate personalizado de fundos de investimentos em ações.  
+O teste consiste em criar uma mini aplicação utilizando (JAVA/JSP/JQUERY) que simula um resgate personalizado de fundos de investimentos em ações.  
   
 Serão avaliados:  
 * Integração com api rest
