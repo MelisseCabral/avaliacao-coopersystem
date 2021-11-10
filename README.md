@@ -38,7 +38,7 @@ Serão avaliados:
 	* Realizar o cálculo do saldo da ação usando o campo percentual, que e o percentual que essa ação representa no valor total do investimento.
 	* Valor a resgatar de cada ação não pode ser maior que saldo acumulado da mesma, deve ser exibido um alerta abaixo do input quando isso acontecer. 
 	Ex (O valor a resgatar não pode ser maior que R$ 2.614,13) 
-	* A cada interação nos inputs, deve ser atualizado o campo valor total a resgatar.  
+	* A cada interação nos inputs, deve ser atualizado o campo valor total do resgate.  
 	* Ao clicar no botão cancelar, deve voltar para tela com a lista de investimentos.
 	* Após o resgate ter sido efetuado com sucesso, ao clicar em novo resgate, voltar para tela com a lista de investimentos.
 	* Colocar mascaras de moeda nos inputs de valor a resgatar, para não permitir a digitação de letras
