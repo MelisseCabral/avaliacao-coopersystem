@@ -1,14 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, StackNavigationOptions } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import Investimentos from './src/screens/Investimentos';
+import Investimentos from './src/screens/Investimentos/index';
 import ResgateInvest from './src/screens/Resgate';
 import { theme } from './src/styles/theme';
 
 const Stack = createStackNavigator();
-const optionsHeader = {
+const optionsHeader: StackNavigationOptions = {
   headerStyle: {
     backgroundColor: theme.colors.primary.one,
     borderBottomWidth:5,
@@ -23,7 +23,7 @@ const optionsHeader = {
   }
 };
 
-export default function App() {
+function App () {
   return (
       <NavigationContainer>
         <Stack.Navigator>
@@ -51,3 +51,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+export default App;
