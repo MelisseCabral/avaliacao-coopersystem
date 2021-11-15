@@ -16,9 +16,7 @@ export default function ModalConfirmacao({ modalVisible, onConfirm , content, ..
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-            onConfirm()
-        }}
+        onRequestClose={onConfirm}
 
         >
           <View style={styles.overlay}>

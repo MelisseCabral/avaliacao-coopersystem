@@ -13,7 +13,11 @@ interface IInvestimentosProps {
 export default function ButtonInvestimento({ investimento, navigation, index, ...props }: IInvestimentosProps) {
   const [investimentoState, setInvestimento] = useState<IInvestimentos>();
 
-  useEffect(() => setInvestimento(investimento), []);
+  useEffect(loadInitialState, []);
+
+  function loadInitialState() {
+    setInvestimento(investimento);
+  }
 
   function navigateToResgate() {
     navigation.navigate('Resgate', {

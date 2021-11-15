@@ -4,18 +4,18 @@
  * @format
  */
 
- import { act } from '@testing-library/react-native';
+import { act, render, waitFor } from '@testing-library/react-native';
 import React from 'react';
 import 'react-native';
-// Note: test renderer must be required after react-native.
-import TestRenderer from 'react-test-renderer'; // ES6
 import App from './../App.tsx';
 
+ test('Espera carregar os investimentos', () => {
+  act(async () => {
+    const { getByText } = render(<App />);
 
- it('renders correctly', () => {
-    act(() => {
-      TestRenderer.create(
-        <App />
-      )}
-    );
- });
+    await waitFor(() => getByText('Investimento I'));
+    fireEvent.press(getByText('Investimento I'));
+
+    expect(getByText('Dados do Invetimento')).toBeTruthy();
+  })
+});

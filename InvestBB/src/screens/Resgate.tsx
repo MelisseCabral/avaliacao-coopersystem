@@ -1,50 +1,42 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import Acao from '../../components/Acao';
-import FormHeader from '../../components/FormHeader';
-import ModalConfirmacao from '../../components/ModalConfirmacao/index';
-import YellowButton from '../../components/YellowButton/index';
-import { IAcao } from '../../interfaces/IAcao';
-import { IInvestimentos } from '../../interfaces/IInvestimentos';
-import { MathUtils } from '../../utils/Math';
-import { styles } from './styles';
+import React, { useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import Acao from '../components/Acao';
+import FormHeader from '../components/FormHeader';
+import ModalConfirmacao from '../components/ModalConfirmacao/index';
+import YellowButton from '../components/YellowButton/index';
+import { IInvestimentos } from '../Interfaces/Investimentos';
+import { theme } from '../styles/theme';
+import { MathUtils } from '../utils/Math';
 
-interface IResgateProps {
-  navigation: any; 
-  route: any
-}
-
-export default function ResgateInvest({ navigation, route, ...props }: IResgateProps) {
-  const [investimento, setInvestimento] = useState<IInvestimentos>();
-  const [error, setError] = useState<boolean>(false);
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
-  const [modalConfirmacao, setModalConfirmacao] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState({
+export default function ResgateInvest(props: { navigation: any; route: any }) {
+  const [investimento, setInvestimento] = React.useState<IInvestimentos>();
+  const [error, setError] = React.useState<boolean>(false);
+  const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
+  const [modalConfirmacao, setModalConfirmacao] = React.useState<boolean>(false);
+  const [modalContent, setModalContent] = React.useState({
     title: '',
     description: "",
     button: '',
   });
 
-  const [resgates, setResgates] = useState<IAcao[]>([]);
-  const [totalResgates, setTotalResgates] = useState(0);
+  const [resgates, setResgates] = React.useState([]);
+  const [totalResgates, setTotalResgates] = React.useState(0);
   
-  useEffect(loadInitialState,[])
-
-  function loadInitialState(){
-    setInvestimento(route.params.investimento);
-    if(route.params.investimento.indicadorCarencia == "S") {
+  useEffect(() => {
+    setInvestimento(props.route.params.investimento);
+    if(props.route.params.investimento.indicadorCarencia == "S") {
       setError(true);
       setErrorMessages(["O investimento selecionado possui carência, não é possível realizar o resgate."]);
     }
-    let resgates = route.params.investimento.acoes.map((acao: any) => {
+    let resgates = props.route.params.investimento.acoes.map((acao: any) => {
         return {
           ...acao,
           valorResgate: 0
         };
       });
     setResgates(resgates);
-  }
+  },[])
 
   function calculaResgate(arrayResgates: any[]) {
     let totalResgate = 0;
@@ -68,6 +60,7 @@ export default function ResgateInvest({ navigation, route, ...props }: IResgateP
 
   function handleResgate() {
     setModalConfirmacao(true); 
+    console.log(totalResgates);
     if(totalResgates === 0) {
       setModalContent({
         title: 'DADOS INVÁLIDOS',
@@ -78,8 +71,8 @@ export default function ResgateInvest({ navigation, route, ...props }: IResgateP
     else if(error) {
       setModalContent({
         title: 'DADOS INVÁLIDOS', 
-        description: `Você preencheu um ou mais campos com valor acima do permitido:
-        \n${errorMessages.join('\n')}`, 
+        description: `Você preencheu um ou mais campos com valor acima do permitido:\n
+        ${errorMessages.join('\n')}`, 
         button: 'NOVO RESGATE'}
       );
     } else {
@@ -92,21 +85,15 @@ export default function ResgateInvest({ navigation, route, ...props }: IResgateP
   }
 
   function handleResgateChange(index: number, value: number) {
-    let newResgates : IAcao[] = resgates.filter((acao: IAcao) => acao.id !== index);
-    const resgate : IAcao = resgates.find((acao: any) => acao.id === index)!;
-    const acao : IAcao = {...resgate, valorResgate: value}; 
+    let newResgates = resgates.filter((acao: any) => acao.id !== index);
+    let resgate = resgates.find((acao: any) => acao.id === index);
+    const acao = {...resgate, valorResgate: value}; 
 
     newResgates.push(acao);
     calculaResgate(newResgates);
     setResgates(newResgates);
   }
 
-  function handleModalConfirmacao() {
-    if (!error && totalResgates > 0) {
-      navigation.navigate("Investimentos");
-    }
-    setModalConfirmacao(false);
-  }
 
   return (
 
@@ -130,8 +117,8 @@ export default function ResgateInvest({ navigation, route, ...props }: IResgateP
 
           <FormHeader title={"Resgate do seu jeito"}/>
 
-          {investimento && investimento.acoes.map((acao: IAcao) => (
-            <Acao key={acao.id} acao={acao} saldo={investimento.saldoTotal} setError={handleErrorChange} updateResgate={handleResgateChange}/>
+          {investimento && investimento.acoes.map((acao: number) => (
+            <Acao acao={acao} saldo={investimento.saldoTotal} setError={handleErrorChange} updateResgate={handleResgateChange}/>
           ))}
 
           <View style={styles.dataForm}>
@@ -146,10 +133,72 @@ export default function ResgateInvest({ navigation, route, ...props }: IResgateP
       <YellowButton title={"Confirmar Resgate"} onPress={handleResgate}/>
       <ModalConfirmacao 
         modalVisible={modalConfirmacao} 
-        onConfirm={handleModalConfirmacao} 
+        onConfirm={setModalConfirmacao} 
         content={modalContent}/>
       <StatusBar style="auto" />
 
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#eee',
+  },
+  dataForm : {
+    backgroundColor: '#fff',
+    padding: 15,
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  labelValue: {
+    fontSize: 20,
+    textTransform: 'uppercase',
+    color: "#777",
+  },
+  dataFormItem : {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 10,
+  },
+  dataInputItem : {
+    margin: 10,
+  },
+  labelInput: {
+    fontSize: 14,
+    color: "#555",
+    fontWeight: 'bold',
+  },
+  textInput: {
+    padding: 10,
+    fontSize: 20,
+    textTransform: 'uppercase',
+    borderBottomColor: "#777", 
+    borderBottomWidth: 2
+  },
+  button: {
+    backgroundColor: theme.colors.secondary.one,
+    alignContent : 'center',
+    justifyContent: 'center',
+    padding: 30,
+  },
+  buttonText: {
+    color: theme.colors.primary.one,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'blue',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: 'blue',
+  }
+});

@@ -16,14 +16,16 @@ export default function Acao({ acao, saldo, setError, updateResgate, ...props}: 
     const [message, setMessage] = useState('');
     const [valor, setValor] = useState(0);
 
-    useEffect(() => {
+    useEffect(loadInitialState, [])
+
+    function loadInitialState() {
         const total = (acao.percentual * saldo) / 100;
         const sigla = acao.nome.slice(-7).replace(')', '').replace('(', '');
         const message = `${sigla}: Valor máximo de ${MathUtils.formatReal(total)}`;
 
         setValorTotal(total.toFixed(2));
         setMessage(message);
-    }, [])
+    }
 
     function changeInput() {
         const error = hasError();
