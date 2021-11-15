@@ -3,24 +3,30 @@ import { Modal, Text, TouchableOpacity, View } from 'react-native';
 import { IContent } from '../../interfaces/IContent';
 import { styles } from './styles';
 
-export default function ModalConfirmacao(props: { modalVisible: boolean, onConfirm: () => void , content: IContent}) {
+interface IModalConfirmacaoProps {
+  modalVisible: boolean, 
+  onConfirm: () => void , 
+  content: IContent
+}
+
+export default function ModalConfirmacao({ modalVisible, onConfirm , content, ...props}: IModalConfirmacaoProps) {
 
     return (
         <Modal style={styles.button}
         animationType="slide"
         transparent={true}
-        visible={props.modalVisible}
+        visible={modalVisible}
         onRequestClose={() => {
-            props.onConfirm()
+            onConfirm()
         }}
 
         >
           <View style={styles.overlay}>
             <View style={styles.container}>
-              <Text style={styles.title}>{props.content.title}</Text>
-              <Text style={styles.subtitle}>{props.content.description} </Text>
-              <TouchableOpacity style={styles.button} onPress={props.onConfirm}>
-                <Text style={styles.buttonText}>{props.content.button}</Text>
+              <Text style={styles.title}>{content.title}</Text>
+              <Text style={styles.subtitle}>{content.description} </Text>
+              <TouchableOpacity style={styles.button} onPress={onConfirm}>
+                <Text style={styles.buttonText}>{content.button}</Text>
               </TouchableOpacity>
             </View>
           </View>

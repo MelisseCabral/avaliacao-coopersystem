@@ -4,27 +4,33 @@ import { IInvestimentos } from '../../interfaces/IInvestimentos';
 import { MathUtils } from '../../utils/Math';
 import { styles } from './styles';
 
-export default function ButtonInvestimento(props: { investimento: any; navigation: any; }) {
-  const [investimento, setInvestimento] = useState<IInvestimentos>();
+interface IInvestimentosProps {
+    investimento: IInvestimentos,
+    navigation: any,
+    index: number,
+}
 
-  useEffect(() => setInvestimento(props.investimento), []);
+export default function ButtonInvestimento({ investimento, navigation, index, ...props }: IInvestimentosProps) {
+  const [investimentoState, setInvestimento] = useState<IInvestimentos>();
+
+  useEffect(() => setInvestimento(investimento), []);
 
   function navigateToResgate() {
-    props.navigation.navigate('Resgate', {
+    navigation.navigate('Resgate', {
       investimento: investimento
     });
   }
 
   return (
-    <TouchableOpacity style={styles.listItem} onPress={navigateToResgate} disabled={investimento && investimento.indicadorCarencia === "S"}>
-        {investimento && (
+    <TouchableOpacity style={styles.listItem} data-testid={`Investimento${index}`} onPress={navigateToResgate} disabled={investimento && investimento.indicadorCarencia === "S"}>
+        {investimentoState && (
             <View style={styles.listItem}>
                 <View style={styles.leftAlign}>
-                  <Text style={styles.titleInvest}>{investimento.nome}</Text>
-                  <Text style={styles.titleSubInvest}>{investimento.objetivo}</Text>
+                  <Text style={styles.titleInvest}>{investimentoState.nome}</Text>
+                  <Text style={styles.titleSubInvest}>{investimentoState.objetivo}</Text>
                 </View>
                 <View style={styles.rightAlign}>
-                    <Text style={styles.valueInvest}>{MathUtils.formatRealNoLetter(investimento.saldoTotal)}</Text>
+                    <Text style={styles.valueInvest}>{MathUtils.formatRealNoLetter(investimentoState.saldoTotal)}</Text>
                 </View>
             </View>
         )}

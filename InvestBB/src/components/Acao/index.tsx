@@ -1,17 +1,24 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { IAcao } from '../../interfaces/IAcao';
 import { MathUtils } from './../../utils/Math';
 import { styles } from './styles';
 
-export default function Acao(props: { acao: IAcao, saldo: number, setError(value: boolean, message: string) : void , updateResgate(index: number, value: number) : void }) {
+interface IAcaoProps {
+    acao: IAcao, 
+    saldo: number, 
+    setError(value: boolean, message: string) : void , 
+    updateResgate(index: number, value: number) : void
+}
+
+export default function Acao({ acao, saldo, setError, updateResgate, ...props}: IAcaoProps) {
     const [valorTotal, setValorTotal] = useState('');
     const [message, setMessage] = useState('');
     const [valor, setValor] = useState(0);
 
     useEffect(() => {
-        const total = (props.acao.percentual * props.saldo) / 100;
-        const sigla = props.acao.nome.slice(-7).replace(')', '').replace('(', '');
+        const total = (acao.percentual * saldo) / 100;
+        const sigla = acao.nome.slice(-7).replace(')', '').replace('(', '');
         const message = `${sigla}: Valor máximo de ${MathUtils.formatReal(total)}`;
 
         setValorTotal(total.toFixed(2));
@@ -20,8 +27,8 @@ export default function Acao(props: { acao: IAcao, saldo: number, setError(value
 
     function changeInput() {
         const error = hasError();
-        props.setError(error, message);
-        props.updateResgate(props.acao.id, valor);
+        setError(error, message);
+        updateResgate(acao.id, valor);
     } 
 
     function hasError() { 
@@ -37,10 +44,10 @@ export default function Acao(props: { acao: IAcao, saldo: number, setError(value
     }
 
     return (
-        <View style={styles.dataForm} key={props.acao.id}>
+        <View style={styles.dataForm} key={acao.id}>
             <View style={styles.dataFormItem}>
                 <Text style={styles.label}>Ação</Text>
-                <Text style={styles.labelValue}>{props.acao.nome}</Text>
+                <Text style={styles.labelValue}>{acao.nome}</Text>
             </View>
             <View style={styles.dataFormItem}>
                 <Text style={styles.label}>Saldo acumulado</Text>

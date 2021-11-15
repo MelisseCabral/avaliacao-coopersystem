@@ -4,8 +4,13 @@ import ButtonInvestimento from '../../components/ButtonInvestimento';
 import HeaderInvestimentos from '../../components/HeaderInvestimentos';
 import { ApiService } from '../../utils/service-api';
 import { styles } from './styles';
+import { IInvestimentos } from '../../interfaces/IInvestimentos';
 
-export default function Investimentos(props: { navigation: any; }) {
+interface IInvestimentosProps {
+  navigation: any
+}
+
+export default function Investimentos({ navigation, ...props }: IInvestimentosProps) {
   const [investimentos, setInvestimentos] = useState([]);
 
   useEffect(() => {
@@ -19,7 +24,7 @@ export default function Investimentos(props: { navigation: any; }) {
       <HeaderInvestimentos />
       {investimentos && investimentos.length > 0 && investimentos.map((investimento: any, index: number) => {
         return (
-          <ButtonInvestimento key={index} investimento={investimento} navigation={props.navigation} />
+          <ButtonInvestimento key={index} index={index} investimento={investimento} navigation={navigation} />
         );
       })}
     </ScrollView>

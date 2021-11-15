@@ -2,13 +2,12 @@
  * @format
  */
 
+import { render } from '@testing-library/react-native';
 import 'react-native';
-import React from 'react';
 import App from '../App';
 
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
+it("Click on investimento", () => {
+  const {getAllByText, getAllByPlaceholderText} = render(<App  />);
 
-it('renders correctly', () => {
-  renderer.create(<App />);
+  expect(getAllByText('Investimento')).toBeTruthy();
 });

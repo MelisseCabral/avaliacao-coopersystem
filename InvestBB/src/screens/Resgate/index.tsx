@@ -10,7 +10,12 @@ import { IInvestimentos } from '../../interfaces/IInvestimentos';
 import { MathUtils } from '../../utils/Math';
 import { styles } from './styles';
 
-export default function ResgateInvest(props: { navigation: any; route: any }) {
+interface IResgateProps {
+  navigation: any; 
+  route: any
+}
+
+export default function ResgateInvest({ navigation, route, ...props }: IResgateProps) {
   const [investimento, setInvestimento] = useState<IInvestimentos>();
   const [error, setError] = useState<boolean>(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
@@ -25,12 +30,12 @@ export default function ResgateInvest(props: { navigation: any; route: any }) {
   const [totalResgates, setTotalResgates] = useState(0);
   
   useEffect(() => {
-    setInvestimento(props.route.params.investimento);
-    if(props.route.params.investimento.indicadorCarencia == "S") {
+    setInvestimento(route.params.investimento);
+    if(route.params.investimento.indicadorCarencia == "S") {
       setError(true);
       setErrorMessages(["O investimento selecionado possui carência, não é possível realizar o resgate."]);
     }
-    let resgates = props.route.params.investimento.acoes.map((acao: any) => {
+    let resgates = route.params.investimento.acoes.map((acao: any) => {
         return {
           ...acao,
           valorResgate: 0
@@ -96,7 +101,7 @@ export default function ResgateInvest(props: { navigation: any; route: any }) {
 
   function handleModalConfirmacao() {
     if (!error && totalResgates > 0) {
-      props.navigation.navigate("Investimentos");
+      navigation.navigate("Investimentos");
     }
     setModalConfirmacao(false);
   }
