@@ -15,11 +15,12 @@ export default function Investimentos({ navigation, ...props }: IInvestimentosPr
 
   useEffect(() => {
     async function loadInvestimentos() {
-      ApiService.getInvestimentos().then((response) => {
+      await ApiService.getInvestimentos().then((response) => {
         setInvestimentos(response.data.response.data.listaInvestimentos);
       });
-    loadInvestimentos();
     }
+    
+    loadInvestimentos();
   }, []);
 
   return (
