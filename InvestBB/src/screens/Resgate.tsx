@@ -49,9 +49,10 @@ export default function ResgateInvest(props: { navigation: any; route: any }) {
     return totalResgate;
   }
 
-  function handleErrorChange(error: boolean, message: string) {
-    setError(error);
-    if(error) {
+  function handleErrorChange(hasError: boolean, message: string) {
+    
+    if(hasError && !error) {
+      setError(error);
       setErrorMessages([...errorMessages, message]);
     } else {
       let newMessages = errorMessages.filter((msg: string) => msg !== message);

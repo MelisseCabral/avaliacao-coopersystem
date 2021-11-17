@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { IContent } from '../../interfaces/IContent';
 import { styles } from './styles';
 
@@ -21,8 +21,11 @@ export default function ModalConfirmacao({ modalVisible, onConfirm , content, ..
         >
           <View style={styles.overlay}>
             <View style={styles.container}>
+              
               <Text style={styles.title}>{content.title}</Text>
-              <Text style={styles.subtitle}>{content.description} </Text>
+              <ScrollView>
+                <Text style={styles.subtitle}>{content.description} </Text>
+              </ScrollView>
               <TouchableOpacity style={styles.button} onPress={onConfirm}>
                 <Text style={styles.buttonText}>{content.button}</Text>
               </TouchableOpacity>

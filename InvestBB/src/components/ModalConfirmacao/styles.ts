@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: 'center',
     backgroundColor: "white",
-    maxHeight: "30%",
+    maxHeight: "35%",
     width: "90%",
     marginTop: "50%",
     marginLeft: "5%",
