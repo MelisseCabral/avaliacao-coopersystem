@@ -76,7 +76,7 @@ export default function ResgateInvest(props: { navigation: any; route: any }) {
         errors: []  
       });
     }
-    else if(error) {
+    else if(errorMessages.length > 0) {
       setModalContent({
         title: 'DADOS INVÁLIDOS', 
         description: `Você preencheu um ou mais campos com valor acima do permitido:`,
