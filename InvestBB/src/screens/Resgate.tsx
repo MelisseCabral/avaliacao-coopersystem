@@ -8,6 +8,7 @@ import YellowButton from '../components/YellowButton/index';
 import { IInvestimentos } from '../Interfaces/Investimentos';
 import { theme } from '../styles/theme';
 import { MathUtils } from '../utils/Math';
+import { IAcao } from '../interfaces/IAcao';
 
 export default function ResgateInvest(props: { navigation: any; route: any }) {
   const [investimento, setInvestimento] = React.useState<IInvestimentos>();
@@ -73,7 +74,7 @@ export default function ResgateInvest(props: { navigation: any; route: any }) {
         title: 'DADOS INVÁLIDOS', 
         description: `Você preencheu um ou mais campos com valor acima do permitido:\n
         ${errorMessages.join('\n')}`, 
-        button: 'NOVO RESGATE'}
+        button: 'CORRIGIR'}
       );
     } else {
       setModalContent({
@@ -87,7 +88,7 @@ export default function ResgateInvest(props: { navigation: any; route: any }) {
   function handleResgateChange(index: number, value: number) {
     let newResgates = resgates.filter((acao: any) => acao.id !== index);
     let resgate = resgates.find((acao: any) => acao.id === index);
-    const acao = {...resgate, valorResgate: value}; 
+    const acao: IAcao = {...resgate, valorResgate: value}; 
 
     newResgates.push(acao);
     calculaResgate(newResgates);
@@ -118,7 +119,7 @@ export default function ResgateInvest(props: { navigation: any; route: any }) {
           <FormHeader title={"Resgate do seu jeito"}/>
 
           {investimento && investimento.acoes.map((acao: number) => (
-            <Acao acao={acao} saldo={investimento.saldoTotal} setError={handleErrorChange} updateResgate={handleResgateChange}/>
+            <Acao key={acao.id} acao={acao} saldo={investimento.saldoTotal} setError={handleErrorChange} updateResgate={handleResgateChange}/>
           ))}
 
           <View style={styles.dataForm}>

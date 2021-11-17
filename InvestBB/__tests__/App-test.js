@@ -10,10 +10,10 @@ import 'react-native';
 import App from './../App.tsx';
 
  test('Espera carregar os investimentos', () => {
-  act(async () => {
+  act( () => {
     const { getByText } = render(<App />);
 
-    await waitFor(() => getByText('Investimento I'));
+    waitFor(() => getByText('Investimento I'));
     fireEvent.press(getByText('Investimento I'));
 
     expect(getByText('Dados do Invetimento')).toBeTruthy();

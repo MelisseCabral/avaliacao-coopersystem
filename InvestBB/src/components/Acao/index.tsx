@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, View } from 'react-native';
+import CurrencyInput from 'react-native-currency-input';
 import { IAcao } from '../../interfaces/IAcao';
 import { MathUtils } from './../../utils/Math';
 import { styles } from './styles';
@@ -13,8 +14,9 @@ interface IAcaoProps {
 
 export default function Acao({ acao, saldo, setError, updateResgate, ...props}: IAcaoProps) {
     const [valorTotal, setValorTotal] = useState('');
+    const [valorResgate, setValorResgate] = useState('');
     const [message, setMessage] = useState('');
-    const [valor, setValor] = useState(0);
+    const [valor, setValor] = useState(null);
 
     useEffect(loadInitialState, [])
 
@@ -25,12 +27,13 @@ export default function Acao({ acao, saldo, setError, updateResgate, ...props}: 
 
         setValorTotal(total.toFixed(2));
         setMessage(message);
+        setValorResgate(MathUtils.formatReal(0));
     }
 
-    function changeInput() {
+    function changeInput(newValue: number) {
         const error = hasError();
         setError(error, message);
-        updateResgate(acao.id, valor);
+        updateResgate(acao.id, newValue);
     } 
 
     function hasError() { 
@@ -40,9 +43,9 @@ export default function Acao({ acao, saldo, setError, updateResgate, ...props}: 
         return false;
     }
 
-    function handleChangeValue(value: string) {
-      const maskRemoved = MathUtils.formatRealToFloat(value);
-      setValor(maskRemoved);
+    function handleChangeValue(value:number) {
+      changeInput(value);
+      setValor(value);
     }
 
     return (
@@ -57,12 +60,17 @@ export default function Acao({ acao, saldo, setError, updateResgate, ...props}: 
             </View>
             <View style={styles.dataInputItem}>
                 <Text style={styles.labelInput}>Valor a resgatar</Text>
-                <TextInput 
-                style={styles.textInput}
-                onBlur={changeInput}
-                onChangeText={(value) => handleChangeValue(value)}
-                placeholder={MathUtils.formatRealNoLetter(parseFloat(valorTotal))}
-                keyboardType="numeric"
+                <CurrencyInput 
+                    style={styles.textInput}
+                    onChangeValue={(text: number) => handleChangeValue(text)}
+                    prefix="R$"
+                    delimiter="."
+                    separator=","
+                    precision={2}
+                    minValue={0}
+                    value={valor}
+                    keyboardType="numeric"
+                    placeholder={MathUtils.formatReal(parseFloat(valorTotal))}
                 />
                 <Text style={styles.helperText}>
                     {(message && hasError()) ? message : ''}

@@ -7,10 +7,9 @@ import { styles } from './styles';
 interface IInvestimentosProps {
     investimento: IInvestimentos,
     navigation: any,
-    index: number,
 }
 
-export default function ButtonInvestimento({ investimento, navigation, index, ...props }: IInvestimentosProps) {
+export default function ButtonInvestimento({ investimento, navigation, ...props }: IInvestimentosProps) {
   const [investimentoState, setInvestimento] = useState<IInvestimentos>();
 
   useEffect(loadInitialState, []);
@@ -26,7 +25,7 @@ export default function ButtonInvestimento({ investimento, navigation, index, ..
   }
 
   return (
-    <TouchableOpacity style={styles.listItem} data-testid={`Investimento${index}`} onPress={navigateToResgate} disabled={investimento && investimento.indicadorCarencia === "S"}>
+    <TouchableOpacity style={styles.listItem} onPress={navigateToResgate} disabled={investimento && investimento.indicadorCarencia === "S"}>
         {investimentoState && (
             <View style={styles.listItem}>
                 <View style={styles.leftAlign}>

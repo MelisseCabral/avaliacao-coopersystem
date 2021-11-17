@@ -11,9 +11,8 @@ export const styles = StyleSheet.create({
       fontWeight: "bold",
       textTransform: "uppercase",
       fontSize: 18,
-      padding: 15,
       color: "#555",
-      
+      paddingLeft: 10,
     },
     leftAlign: {
       flex: 1,

@@ -18,6 +18,7 @@ export const styles = StyleSheet.create({
       alignItems: 'flex-start',
       justifyContent: 'flex-start',
       width: '100%',
+      paddingLeft: 10,
     },
     rightAlign: {
       flex: 1,

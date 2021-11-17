@@ -1,14 +1,18 @@
 export class MathUtils {
     public static formatRealNoLetter( value: number )
     {
-        var f = value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        return f.replace('R$','');
+        const aux = value.toFixed(2).toString();
+        const [int, dec] = aux.split('.');
+        const v = int.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "," + dec;   
+    
+        return v;
         
     }
+
     public static formatReal( value: number )
     {
-        var f = value.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
-        return f;
+        const aux = this.formatRealNoLetter(value);
+        return `R$ ${aux}`;
         
     }
     public static formatRealToFloat( value: string )
