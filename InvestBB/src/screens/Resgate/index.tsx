@@ -25,9 +25,6 @@ export default function ResgateInvest(props: { navigation: any; route: any }) {
 
   const [resgates, setResgates] = React.useState<IAcao[]>([]);
   const [totalResgates, setTotalResgates] = React.useState(0);
-  useEffect(() => {console.log(errorMessages.length
-    
-    ) }, [errorMessages]);
   
   useEffect(() => {
     setInvestimento(props.route.params.investimento);
