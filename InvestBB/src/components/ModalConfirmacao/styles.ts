@@ -52,5 +52,13 @@ export const styles = StyleSheet.create({
     color: theme.colors.primary.one,
     textAlign: "left",
     paddingBottom: 25,
+  },
+  error: {
+    fontSize: 18,
+    paddingLeft: 10,
+    paddingRight: 10,
+    lineHeight: 25,
+    color: theme.colors.primary.one,
+    textAlign: "left",
   }
 });

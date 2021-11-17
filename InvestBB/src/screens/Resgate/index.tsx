@@ -1,49 +1,51 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import Acao from '../../components/Acao';
 import FormHeader from '../../components/FormHeader';
 import ModalConfirmacao from '../../components/ModalConfirmacao/index';
 import YellowButton from '../../components/YellowButton/index';
 import { IAcao } from '../../interfaces/IAcao';
-import { IInvestimentos } from '../../interfaces/IInvestimentos';
+import { IContent } from '../../interfaces/IContent';
+import { IInvestimentos } from '../../Interfaces/Investimentos';
 import { MathUtils } from '../../utils/Math';
 import { styles } from './styles';
 
-interface IResgateProps {
-  navigation: any; 
-  route: any
-}
-
-export default function ResgateInvest({ navigation, route, ...props }: IResgateProps) {
-  const [investimento, setInvestimento] = useState<IInvestimentos>();
-  const [error, setError] = useState<boolean>(false);
-  const [errorMessages, setErrorMessages] = useState<string[]>([]);
-  const [modalConfirmacao, setModalConfirmacao] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState({
+export default function ResgateInvest(props: { navigation: any; route: any }) {
+  const [investimento, setInvestimento] = React.useState<IInvestimentos>();
+  const [error, setError] = React.useState<boolean>(false);
+  const [errorMessages, setErrorMessages] = React.useState<string[]>([]);
+  const [modalConfirmacao, setModalConfirmacao] = React.useState<boolean>(false);
+  const [modalContent, setModalContent] = React.useState<IContent>({
     title: '',
     description: "",
     button: '',
+    errors: []
   });
 
-  const [resgates, setResgates] = useState<IAcao[]>([]);
-  const [totalResgates, setTotalResgates] = useState(0);
+  const [resgates, setResgates] = React.useState<IAcao[]>([]);
+  const [totalResgates, setTotalResgates] = React.useState(0);
+  useEffect(() => {console.log(errorMessages.length
+    
+    ) }, [errorMessages]);
   
-  useEffect(loadInitialState,[])
-
-  function loadInitialState(){
-    setInvestimento(route.params.investimento);
-    if(route.params.investimento.indicadorCarencia == "S") {
+  useEffect(() => {
+    setInvestimento(props.route.params.investimento);
+    if(props.route.params.investimento.indicadorCarencia == "S") {
       setError(true);
       setErrorMessages(["O investimento selecionado possui carência, não é possível realizar o resgate."]);
     }
-    let resgates = route.params.investimento.acoes.map((acao: any) => {
+    let resgates = props.route.params.investimento.acoes.map((acao: any) => {
         return {
           ...acao,
           valorResgate: 0
         };
       });
     setResgates(resgates);
+  },[])
+
+  function handleModal() {
+    setModalConfirmacao(false);
   }
 
   function calculaResgate(arrayResgates: any[]) {
@@ -56,57 +58,56 @@ export default function ResgateInvest({ navigation, route, ...props }: IResgateP
     return totalResgate;
   }
 
-  function handleErrorChange(error: boolean, message: string) {
-    setError(error);
-    if(error) {
+  function handleErrorChange(hasError: boolean, message: string) {
+    
+    if(hasError && !error) {
       setErrorMessages([...errorMessages, message]);
-    } else {
+    } else if(error && !hasError) {
       let newMessages = errorMessages.filter((msg: string) => msg !== message);
       setErrorMessages(newMessages);
     }
+    setError(hasError);
   }
 
   function handleResgate() {
-    setModalConfirmacao(true); 
+    setModalConfirmacao(true);
     if(totalResgates === 0) {
       setModalContent({
         title: 'DADOS INVÁLIDOS',
         description: 'Nenhum resgate foi realizado preencha o valor a ser resgatado.',
-        button: 'CORRIGIR'
+        button: 'CORRIGIR',
+        errors: []  
       });
     }
     else if(error) {
       setModalContent({
         title: 'DADOS INVÁLIDOS', 
-        description: `Você preencheu um ou mais campos com valor acima do permitido:
-        \n${errorMessages.join('\n')}`, 
-        button: 'NOVO RESGATE'}
+        description: `Você preencheu um ou mais campos com valor acima do permitido:`,
+        button: 'CORRIGIR',
+        errors: [...errorMessages]
+      }
       );
     } else {
       setModalContent({
         title: 'Resgate efetuado!', 
-        description: "O valor do estará na sua conta em até 5 dias úteis! ", button: 'NOVO RESGATE'}
+        description: "O valor do estará na sua conta em até 5 dias úteis! ", 
+        button: 'NOVO RESGATE',
+        errors: []}
       );
       setModalConfirmacao(true);
     }
   }
 
   function handleResgateChange(index: number, value: number) {
-    let newResgates : IAcao[] = resgates.filter((acao: IAcao) => acao.id !== index);
-    const resgate : IAcao = resgates.find((acao: any) => acao.id === index)!;
-    const acao : IAcao = {...resgate, valorResgate: value}; 
+    let newResgates = resgates.filter((acao: any) => acao.id !== index);
+    let resgate = resgates.find((acao: any) => acao.id === index);
+    const acao = {...resgate, valorResgate: value}; 
 
-    newResgates.push(acao);
+    newResgates.push(acao as IAcao);
     calculaResgate(newResgates);
     setResgates(newResgates);
   }
 
-  function handleModalConfirmacao() {
-    if (!error && totalResgates > 0) {
-      navigation.navigate("Investimentos");
-    }
-    setModalConfirmacao(false);
-  }
 
   return (
 
@@ -130,8 +131,8 @@ export default function ResgateInvest({ navigation, route, ...props }: IResgateP
 
           <FormHeader title={"Resgate do seu jeito"}/>
 
-          {investimento && investimento.acoes.map((acao: IAcao) => (
-            <Acao key={acao.id} acao={acao} saldo={investimento.saldoTotal} setError={handleErrorChange} updateResgate={handleResgateChange}/>
+          {investimento && investimento.acoes.map((acao: IAcao, index: number) => (
+            <Acao key={index} acao={acao} saldo={investimento.saldoTotal} setError={handleErrorChange} updateResgate={handleResgateChange}/>
           ))}
 
           <View style={styles.dataForm}>
@@ -146,7 +147,7 @@ export default function ResgateInvest({ navigation, route, ...props }: IResgateP
       <YellowButton title={"Confirmar Resgate"} onPress={handleResgate}/>
       <ModalConfirmacao 
         modalVisible={modalConfirmacao} 
-        onConfirm={handleModalConfirmacao} 
+        onConfirm={handleModal} 
         content={modalContent}/>
       <StatusBar style="auto" />
 

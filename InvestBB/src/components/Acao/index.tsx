@@ -14,9 +14,10 @@ interface IAcaoProps {
 
 export default function Acao({ acao, saldo, setError, updateResgate, ...props}: IAcaoProps) {
     const [valorTotal, setValorTotal] = useState('');
+    const [error, setErrorState] = useState(false);
     const [valorResgate, setValorResgate] = useState('');
     const [message, setMessage] = useState('');
-    const [valor, setValor] = useState(null);
+    const [valor, setValor] = useState<number>();
 
     useEffect(loadInitialState, [])
 
@@ -31,19 +32,23 @@ export default function Acao({ acao, saldo, setError, updateResgate, ...props}: 
     }
 
     function changeInput(newValue: number) {
-        const error = hasError();
+        const error = hasError(newValue);
         setError(error, message);
         updateResgate(acao.id, newValue);
     } 
 
-    function hasError() { 
-        if (valor > parseFloat(valorTotal)) {
-            return true;
-        }
-        return false;
+    function hasError(value?: number) { 
+        const valueToCompare = value || valor || 0;
+        
+        const total = (acao.percentual * saldo) / 100;
+        const nerror = valueToCompare > total;
+        
+        setErrorState(nerror);
+        return nerror;
     }
 
     function handleChangeValue(value:number) {
+    
       changeInput(value);
       setValor(value);
     }
@@ -73,7 +78,7 @@ export default function Acao({ acao, saldo, setError, updateResgate, ...props}: 
                     placeholder={MathUtils.formatReal(parseFloat(valorTotal))}
                 />
                 <Text style={styles.helperText}>
-                    {(message && hasError()) ? message : ''}
+                    {(message && error) ? message : ''}
                 </Text>
             </View>
 

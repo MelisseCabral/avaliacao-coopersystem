@@ -28,7 +28,7 @@ export default function Investimentos({ navigation, ...props }: IInvestimentosPr
       <HeaderInvestimentos />
       {investimentos && investimentos.length > 0 && investimentos.map((investimento: any, index: number) => {
         return (
-          <ButtonInvestimento key={index} index={index} investimento={investimento} navigation={navigation} />
+          <ButtonInvestimento key={index} investimento={investimento} navigation={navigation} />
         );
       })}
     </ScrollView>
